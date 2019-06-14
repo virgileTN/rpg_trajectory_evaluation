@@ -142,7 +142,7 @@ class Trajectory:
             pass
         else:
             self.scale, self.rot, self.trans = au.alignTrajectory(
-                self.p_es, self.p_gt, self.q_es, self.q_gt, 
+                self.p_es, self.p_gt, self.q_es, self.q_gt,
                 self.align_type, self.align_num_frames)
 
         self.p_es_aligned = np.zeros(np.shape(self.p_es))
@@ -188,11 +188,12 @@ class Trajectory:
             self.abs_errors['abs_e_scale_perc'] = e_scale_perc
             self.abs_errors['abs_e_scale_stats'] = stats_scale
             print('...RMSE calculated.')
+            self.write_aligned_trajectories()
         return
 
     def write_errors_to_yaml(self):
         self.abs_err_stats_fn = os.path.join(
-            self.saved_results_dir, 'absolute_err_statistics'+'_' + 
+            self.saved_results_dir, 'absolute_err_statistics'+'_' +
             self.align_str+'.yaml')
         res_writer.update_and_save_stats(
             self.abs_errors['abs_e_trans_stats'], 'trans',
@@ -253,7 +254,7 @@ class Trajectory:
                             'rel_yaw_stats':
                             res_writer.compute_statistics(e_yaw),
                             'rel_gravity': e_gravity,
-                            'rel_gravity_stats': 
+                            'rel_gravity_stats':
                             res_writer.compute_statistics(e_gravity)}
             self.rel_errors[subtraj_len] = dist_rel_err
 
@@ -266,3 +267,53 @@ class Trajectory:
                   " subtrajectory lengths...")
             for l in self.preset_boxplot_distances:
                 self.compute_relative_error_at_subtraj_len(l)
+
+    def write_aligned_trajectories(self):
+        et_file = os.path.join(self.saved_results_dir, 'aligned_traj_et.txt')
+        gt_file = os.path.join(self.saved_results_dir, 'aligned_traj_gt.txt')
+        ter_file = os.path.join(self.saved_results_dir, 'aligned_traj_trans_err.txt')
+        rer_file = os.path.join(self.saved_results_dir, 'aligned_traj_rot_err.txt')
+        # gt_file = os.path.join(self.data_dir, 'aligned_traj_gt.txt')
+        # print(self.accum_distances)
+        assert len(self.p_es_aligned) == len(self.q_es_aligned) == len(self.p_gt) == len(self.q_gt)
+        with open(et_file, 'w+') as et:
+            for i in range(len(self.p_es_aligned)):
+                et.write('{} {} {} {} {} {} {}\n'.format(
+                    self.p_es_aligned[i][0],
+                    self.p_es_aligned[i][1],
+                    self.p_es_aligned[i][2],
+                    self.q_es_aligned[i][0],
+                    self.q_es_aligned[i][1],
+                    self.q_es_aligned[i][2],
+                    self.q_es_aligned[i][3],
+                    ))
+        with open(gt_file, 'w+') as gt:
+            for i in range(len(self.p_es_aligned)):
+                gt.write('{} {} {} {} {} {} {}\n'.format(
+                    self.p_gt[i][0],
+                    self.p_gt[i][1],
+                    self.p_gt[i][2],
+                    self.q_gt[i][0],
+                    self.q_gt[i][1],
+                    self.q_gt[i][2],
+                    self.q_gt[i][3],
+                    ))
+        if self.abs_errors['abs_e_trans_vec'] is not None:
+            with open(ter_file, 'w+') as er:
+                for i in range(len(self.abs_errors['abs_e_trans_vec'])):
+                    er.write('{} {} {} {}\n'.format(
+                        self.abs_errors['abs_e_trans_vec'][i][0],
+                        self.abs_errors['abs_e_trans_vec'][i][1],
+                        self.abs_errors['abs_e_trans_vec'][i][2],
+                        self.accum_distances[i]
+                        ))
+        if self.abs_errors['abs_e_ypr'] is not None:
+            with open(rer_file, 'w+') as er:
+                for i in range(len(self.abs_errors['abs_e_ypr'])):
+                    er.write('{} {} {} {}\n'.format(
+                        self.abs_errors['abs_e_ypr'][i][0],
+                        self.abs_errors['abs_e_ypr'][i][1],
+                        self.abs_errors['abs_e_ypr'][i][2],
+                        self.accum_distances[i]
+                        ))
+        print("Saving aligned traj...Done")

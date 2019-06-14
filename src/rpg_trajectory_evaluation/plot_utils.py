@@ -26,7 +26,7 @@ def color_box(bp, color):
 
 
 def boxplot_compare(ax, xlabels,
-                    data, data_labels, data_colors):
+                    data, data_labels, data_colors, ymax=None):
     n_data = len(data)
     n_xlabel = len(xlabels)
     leg_handles = []
@@ -46,7 +46,13 @@ def boxplot_compare(ax, xlabels,
     ax.set_xticks(np.arange(n_xlabel))
     ax.set_xticklabels(xlabels)
     xlims = ax.get_xlim()
+    ylims = ax.get_ylim()
     ax.set_xlim([xlims[0]-0.1, xlims[1]-0.1])
+    if ymax is not None:
+        ax.set_ylim([-0.01, ymax])
+    else:
+        ax.set_ylim([ylims[0]-0.1, ylims[1]])
+
     if n_data != 1:
         ax.legend(leg_handles, leg_labels, bbox_to_anchor=(
             1.05, 1), loc=2, borderaxespad=0.)

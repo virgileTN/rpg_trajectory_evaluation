@@ -17,11 +17,10 @@ rc('text', usetex=True)
 
 FORMAT = '.pdf'
 
-ALGORITHM_CONFIGS = ['vio_mono', 'vio_stereo']
+ALGORITHM_CONFIGS = ['naps']
 
 # These are the labels that will be displayed for items in ALGORITHM_CONFIGS
-PLOT_LABELS = {'vio_mono': 'vio mono',
-               'vio_stereo': 'vio stereo'}
+PLOT_LABELS = {'naps': 'naps'}
 
 # assgin colors to different configurations
 # make use you have more colors in the pallete!
@@ -34,7 +33,7 @@ for i in range(len(ALGORITHM_CONFIGS)):
 
 # DATASETS = ['MH_01', 'MH_02', 'MH_03', 'MH_04', 'MH_05', 'V1_01',
             # 'V1_02', 'V1_03', 'V2_01', 'V2_02', 'V2_03']
-DATASETS = ['MH_01', 'MH_03', 'MH_05', 'V2_01', 'V2_02', 'V2_03']
+DATASETS = ['dc1', 'dc2', 'dc3', 'dc4', 'dfc', 'lat']
 
 # The maximum lenght will be used to calculate the relative error.
 # otherwise it is calculated from the groundtruth
@@ -121,7 +120,7 @@ def plot_odometry_error_per_dataset(dataset_rel_err, dataset_names, out_dir):
             111, xlabel='Distance traveled [m]',
             ylabel='Translation error [m]')
         pu.boxplot_compare(ax, distances, rel_err['trans_err'].values(),
-                           config_labels, config_colors)
+                           config_labels, config_colors, ymax=0.15)
         fig.tight_layout()
         fig.savefig(output_dir+'/'+dataset_nm +
                     '_translation_error'+FORMAT, bbox_inches="tight")
@@ -181,7 +180,7 @@ def plot_trajectories(dataset_trajectories_dict, dataset_names, output_dir):
         ax = fig.add_subplot(111, aspect='equal',
                              xlabel='x [m]', ylabel='z [m]')
         for alg in p_es_0:
-            pu.plot_trajectory_side(ax, p_es_0[alg], COLORS[alg], 
+            pu.plot_trajectory_side(ax, p_es_0[alg], COLORS[alg],
                                     PLOT_LABELS[alg])
         pu.plot_trajectory_side(ax, p_gt_0, 'm', 'Groundtruth')
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
@@ -307,7 +306,7 @@ def plot_overall_odometry_errors(overall_err, output_dir):
         111, xlabel='Distance traveled [m]', ylabel='Translation error [m]')
     pu.boxplot_compare(ax, overall_err['distances'],
                        overall_err['trans_err'].values(),
-                       config_labels, config_colors)
+                       config_labels, config_colors,ymax=0.15)
     fig.tight_layout()
     fig.savefig(output_dir+'/overall_rel_translation_error' +
                 FORMAT, bbox_inches="tight")

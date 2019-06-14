@@ -22,6 +22,9 @@ if __name__ == '__main__':
     parser.add_argument(
         'result_dir', type=str,
         help="Folder containing the groundtruth and the estimate.")
+    # parser.add_argument(
+    #     '--y_trans_max', action='store_true', type=float,
+    #     help="ymax for boxplot.")
     parser.add_argument(
         '--plots_dir', type=str,
         help="Folder to output plots",
@@ -130,7 +133,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(
         111, xlabel='Distance traveled [m]',
         ylabel='Translation error [m]')
-    pu.boxplot_compare(ax, distances, rel_trans_err, labels, colors)
+    pu.boxplot_compare(ax, distances, rel_trans_err, labels, colors, 0.05)
     fig.tight_layout()
     fig.savefig(plots_dir+'/rel_translation_error'+FORMAT, bbox_inches="tight")
     plt.close(fig)
@@ -139,7 +142,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(
         111, xlabel='Distance traveled [m]',
         ylabel='Translation error [\%]')
-    pu.boxplot_compare(ax, distances, rel_trans_err_perc, labels, colors)
+    pu.boxplot_compare(ax, distances, rel_trans_err_perc, labels, colors,)
     fig.tight_layout()
     fig.savefig(plots_dir+'/rel_translation_error_perc'+FORMAT,
                 bbox_inches="tight")
@@ -149,7 +152,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(
         111, xlabel='Distance traveled [m]',
         ylabel='Yaw error [deg]')
-    pu.boxplot_compare(ax, distances, rel_yaw_err, labels, colors)
+    pu.boxplot_compare(ax, distances, rel_yaw_err, labels, colors,)
     fig.tight_layout()
     fig.savefig(plots_dir+'/rel_yaw_error'+FORMAT, bbox_inches="tight")
     plt.close(fig)
