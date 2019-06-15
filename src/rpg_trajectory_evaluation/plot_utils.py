@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
+import seaborn as sns
 from matplotlib import rc
 rc('font', **{'family': 'serif', 'serif': ['Cardo']})
 rc('text', usetex=True)
@@ -46,12 +47,14 @@ def boxplot_compare(ax, xlabels,
     ax.set_xticks(np.arange(n_xlabel))
     ax.set_xticklabels(xlabels)
     xlims = ax.get_xlim()
-    ylims = ax.get_ylim()
+    ymax = 0
+    for caps in bp['caps']:
+        c_max = max(caps.get_ydata())
+        if c_max > ymax:
+            ymax = c_max
+
     ax.set_xlim([xlims[0]-0.1, xlims[1]-0.1])
-    if ymax is not None:
-        ax.set_ylim([-0.01, ymax])
-    else:
-        ax.set_ylim([ylims[0]-0.1, ylims[1]])
+    ax.set_ylim([0-ymax*0.04, ymax*1.1])
 
     if n_data != 1:
         ax.legend(leg_handles, leg_labels, bbox_to_anchor=(
