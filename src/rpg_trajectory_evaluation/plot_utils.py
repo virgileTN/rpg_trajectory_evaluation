@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
-import seaborn as sns
 from matplotlib import rc
 rc('font', **{'family': 'serif', 'serif': ['Cardo']})
 rc('text', usetex=True)
