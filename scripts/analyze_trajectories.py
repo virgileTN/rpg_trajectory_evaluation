@@ -6,7 +6,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
-
+import pickle
 import add_path
 from trajectory import Trajectory
 import plot_utils as pu
@@ -18,9 +18,11 @@ rc('text', usetex=True)
 FORMAT = '.pdf'
 
 ALGORITHM_CONFIGS = ['naps']
+# ALGORITHM_CONFIGS = ['vio_mono', 'vio_stereo']
 
 # These are the labels that will be displayed for items in ALGORITHM_CONFIGS
 PLOT_LABELS = {'naps': 'naps'}
+# PLOT_LABELS = {'naps': 'naps', 'vio_mono': 'vio mono', 'vio_stereo': 'vio stereo'}
 
 # assgin colors to different configurations
 # make use you have more colors in the pallete!
@@ -33,7 +35,8 @@ for i in range(len(ALGORITHM_CONFIGS)):
 
 # DATASETS = ['MH_01', 'MH_02', 'MH_03', 'MH_04', 'MH_05', 'V1_01',
             # 'V1_02', 'V1_03', 'V2_01', 'V2_02', 'V2_03']
-DATASETS = ['dc1', 'dc2', 'dc3', 'dc4', 'dfc', 'lat']
+# DATASETS = ['MH_01', 'MH_03', 'MH_05', 'V2_01', 'V2_02', 'V2_03']
+DATASETS = ['dc1', 'dc2', 'dc3', 'dc4', 'dfc', 'lat', 'gm3', 'gm4', 'rm1']
 
 # The maximum lenght will be used to calculate the relative error.
 # otherwise it is calculated from the groundtruth
@@ -474,6 +477,9 @@ if __name__ == '__main__':
             print('> Saving {0}'.format(traj.uid))
             traj.cache_current_error()
             traj.write_errors_to_yaml()
+
+    with open(output_dir, 'w') as f:
+        pickle.dump(overall_err, f)
 
     print("#####################################")
     print(">>> Start plotting and writing results....")
