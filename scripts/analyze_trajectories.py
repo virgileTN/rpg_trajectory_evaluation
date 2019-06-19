@@ -475,22 +475,23 @@ if __name__ == '__main__':
             traj.cache_current_error()
             traj.write_errors_to_yaml()
 
-    with open(output_dir, 'w') as f:
+    fname = os.path.join(output_dir, 'overall.pickle')
+    with open(fname, 'w') as f:
         pickle.dump(overall_err, f)
 
     print("#####################################")
     print(">>> Start plotting and writing results....")
     print("#####################################")
-    if args.plot_trajectories:
-        print('\n--- Plotting trajectory top and side view ... ---')
-        plot_trajectories(dataset_trajectories_list, datasets, output_dir)
-    if args.odometry_error_per_dataset:
-        print('\n--- Generating relative (KITTI style) error plots... ---')
-        plot_odometry_error_per_dataset(dataset_rel_err, datasets, output_dir)
-    if args.overall_odometry_error:
-        print('\n--- Plotting overall error ... ---')
-        plot_overall_odometry_errors(overall_err, output_dir)
-        write_overall_odometry_errors_table(overall_err_tables, output_dir)
+    # if args.plot_trajectories:
+    #     print('\n--- Plotting trajectory top and side view ... ---')
+    #     plot_trajectories(dataset_trajectories_list, datasets, output_dir)
+    # if args.odometry_error_per_dataset:
+    #     print('\n--- Generating relative (KITTI style) error plots... ---')
+    #     plot_odometry_error_per_dataset(dataset_rel_err, datasets, output_dir)
+    # if args.overall_odometry_error:
+    #     print('\n--- Plotting overall error ... ---')
+    #     plot_overall_odometry_errors(overall_err, output_dir)
+    #     write_overall_odometry_errors_table(overall_err_tables, output_dir)
     if args.rmse_table:
         print('\n--- Generating RMSE tables... ---')
         res_writer.write_tex_table(
